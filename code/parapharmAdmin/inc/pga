@@ -1,0 +1,191 @@
+ <script>
+        // var file;
+        $(document).ready(function(e){
+            // e.preventDefault();
+        //     $('#form_admin').submit(function(e){  
+                              
+        //                       e.preventDefault(); //évite le comportement normal de soumettre, c'est-à-dire le rechargement total de la page
+                              
+                                 
+        //                     //   categorie = $.trim($('#cat').val());
+        //                     // user = $("#user_up").val();
+        //                     // email = $("#email_up").val();
+        //                     // tel = $("#tel_up").val();
+        //                     // img_insert = $("#img_insert").val();
+        //                     // img = $('#img').attr('src');   
+        //                     // alert(img_insert);                      
+        //                           $.ajax({
+        //                             // url: "bd/update.php",
+        //                             type: "POST",
+        //                             datatype:"json",    
+        //                             // data:  {user: user ,email: email ,tel: tel , img_insert: img_insert , img: img},
+                                        
+        //                             success: function(respone) {
+        //                                 conole.log('response : ' + JSON.stringify(response) );
+        //                                 alert('response : ' + JSON.stringify(response) );
+        //                             // console.log(data.pic);
+        //                             // alert(data.tmp_name);
+        //                         //   $.ajax({
+        //                         //     url: "bd/update.php",
+        //                         //     type: "POST",
+        //                         //     datatype:"json",    
+        //                         //     data:  {id: data},
+                                        
+        //                         //      });
+        //                             },
+        // error : function () {
+        //    alert("error");
+        // }
+        //                           });			        
+        //                     //   $('#modalCat').modal('hide');
+                                                                                           
+        //                   });
+                          
+    ///////////////////////////
+            var showModal = '<?php  echo $show_modal; ?>';
+    if(showModal=="1"){$("#ex").modal("show");}
+
+    
+                                    
+    $(document).on("click", ".btnSave", function(){
+        $.ajax({
+        url : '',
+        type : 'POST',
+        // data : data,
+        dataType : 'json',
+        success : function (result) {
+           alert(result['pic']); // "Hello world!" alerted
+        //    console.log(result['advert']) // The value of your php $row['adverts'] will be displayed
+        },
+        error : function () {
+           alert("error");
+        }
+    });
+        $("#ex").modal("hide");
+    });
+
+});
+                                    
+
+
+
+        </script>
+
+
+        <?php
+      
+      $SESS='';
+    // include('Database/dbconfig.php');
+    
+         if(isset($_POST['update-admin'])){
+    
+          $pic = $_FILES["user_pic"]["name"];
+          echo $pic;
+          
+          $picjs = array(
+            'pic' => $pic,
+            'tmp_name' => $_FILES["user_pic"]["tmp_name"],
+            'name' => $_FILES["user_pic"]["name"]
+          );
+          echo json_encode($picjs);
+          if(file_exists("uploads/".$_FILES["user_pic"]["name"])){
+            $SESS = 'Image already exists '.$pic; 
+            
+          }else{
+           $query1="UPDATE `register` SET username='$_POST[user_up]' , email='$_POST[email_up]' , numero_tel='$_POST[tel_up]' , picture='$pic'";
+           $query1_run = mysqli_query($conn,$query1);
+           if($query1_run){
+            
+             move_uploaded_file($_FILES["user_pic"]["tmp_name"],"uploads/".$_FILES["user_pic"]["name"]);
+            //  echo '<script type ="text/javascript"> alert("Data Updated") </script>';
+            //  $_SESSION['status'] = "ADDED";
+            
+            
+          }
+           else{
+             echo '<script type ="text/javascript"> alert("mamchatch") </script>';
+           }
+          }
+    
+         }
+    
+         
+         
+    
+    ?>
+
+    <?php 
+          
+          if($SESS != '' ){
+               
+
+              //  echo '<h2 class="bg-danger text-white" >' .$_SESSION['status'] .'<h2>';
+               
+
+      $rep  = '<form class="form-horizontal form-material" action="" method="post" enctype="multipart/form-data">';
+      $rep .= '<div class="modal" tabindex="-1" role="dialog" id="ex">';
+      $rep .=  '<div class="modal-dialog" role="document">';
+      $rep .=    '<div class="modal-content">';
+      $rep .=       '<div class="modal-header">';
+      $rep .=          '<h5 class="modal-title">Modal title</h5>';
+      $rep .=            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+      $rep .=              '<span aria-hidden="true">&times;</span></button></div>';
+      $rep .=                 '<div class="modal-body">';
+      $rep .=                   '<p>'.$SESS.'</p></div>';
+      $rep .=                       '<div class="modal-footer">';
+      $rep .=                           '<button type="button" class="btn btn-primary btnSave">Save changes</button><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div></div></div></div></form>';
+      
+      echo $rep;
+      
+      $show_modal = '1';
+      // unset($_SESSION['status']);
+
+          }else{
+            $show_modal = '0';
+          }
+
+
+          // if(isset($_POST['btnSave'])){
+
+          //   $query1="UPDATE `register` SET  , picture='$pic'";
+          //   $query1_run = mysqli_query($conn,$query1);
+      
+          //  }        
+          
+          
+?>
+    
+    //           $(document).ready(function(e){
+//     // Submit form data via Ajax
+//     $("#form_add_cat").on('submit', function(e){
+//         e.preventDefault();
+//         alert("GO GO GO");
+//         $.ajax({
+//             type: 'POST',
+//             url: 'add1.php',
+//             data: new FormData(this),
+//             dataType: 'json',
+//             contentType: false,
+//             cache: false,
+//             processData:false,
+//             beforeSend: function(){
+//                 $('.insert_cat').attr("disabled","disabled");
+//                 $('#form_add_cat').css("opacity",".5");
+//             },
+//             success: function(response){ 
+//                 alert("Succes");
+//                 $('.statusMsg').html('');
+//                 if(response.status == 1){
+                    
+//                     $('#form_add_cat')[0].reset();
+//                     $('.statusMsg').html('<p class="alert alert-success">'+response.message+'</p>');
+                    
+//                 }else{
+//                 $('.statusMsg').html('<p class="alert alert-danger">'+response.message+'</p>');
+//                 }
+//                 $('#form_add_cat').css("opacity","");
+//                 $(".insert_cat").removeAttr("disabled");
+//             }
+//         });
+//     });
+// });
